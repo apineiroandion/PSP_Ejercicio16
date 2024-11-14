@@ -1,22 +1,24 @@
 package controller.hilos;
 
+import controller.AscensorController;
 import model.Ascensor;
 import view.FloorPanel;
 
 public class Subida extends Thread{
     private Ascensor ascensor;
     private FloorPanel floorPanel;
+    private AscensorController ascensorController;
     private int nuevoPiso;
 
-    public Subida(Ascensor ascensor, FloorPanel floorPanel) {
+    public Subida(Ascensor ascensor, FloorPanel floorPanel, AscensorController ascensorController) {
         this.ascensor = ascensor;
         this.floorPanel = floorPanel;
+        this.ascensorController = ascensorController;
     }
 
     @Override
     public void run() {
         ascensor.setEnMovimiento(true);
-        //TODO: Implementar limite de piso
         for (int i = ascensor.getPisoActual(); i <= nuevoPiso; i++) {
             ascensor.setPisoActual(i);
             floorPanel.setFloor(ascensor.getPisoActual());
@@ -27,6 +29,8 @@ public class Subida extends Thread{
             }
         }
         ascensor.setEnMovimiento(false);
+        ascensor.setPisoActual(nuevoPiso);
+        ascensorController.viajeTerminado();
     }
     public void setNuevoPiso(int nuevoPiso) {
         this.nuevoPiso = nuevoPiso;
